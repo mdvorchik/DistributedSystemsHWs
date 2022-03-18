@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/testlock?useUnicode=true&amp;serverTimezone=UTC&amp;useSSL=false</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">1234</property>
+
+        <!-- Sql dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+        <!-- Printing the sql queries to the console -->
+        <property name="show_sql">true</property>
+
+        <!-- Mapping to the create schema DDL -->
+        <property name="hbm2ddl.auto">create</property>
+
+        <!-- Model class -->
+        <mapping class="ru.mipt.hw.bank.Account" />
+    </session-factory>
+</hibernate-configuration>

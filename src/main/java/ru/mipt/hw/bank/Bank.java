@@ -1,29 +1,34 @@
 package ru.mipt.hw.bank;
 
-public class Bank {
-    private final Accounts accounts;
 
-    public Bank(Accounts accounts) {
-        this.accounts = accounts;
+import org.hibernate.Session;
+
+public class Bank {
+    private final Session s;
+
+    public Bank(Session session) {
+        this.s = session;
     }
 
-    //optimistic lock, pessimistic lock
+    //optimistic lock
     public void transfer(long fromId, long toId, double money) {
-        Account fromAcc = accounts.findById(fromId);
-        Account toAcc = accounts.findById(toId);
+        // Hibernate session object to start the db transaction.
+        Account fromAcc = s.get(Account.class, fromId);
+        Account toAcc = s.get(Account.class, toId);
+        if (fromAcc != null && toAcc != null) {
+            s.getTransaction().begin();
 
-        var min = fromAcc.getId() < toAcc.getId() ? fromAcc : toAcc;
-        var max = fromAcc.getId() >= toAcc.getId() ? fromAcc : toAcc;
-
-        synchronized (min) {
-            synchronized (max) {
-                if (!fromAcc.hasMoney(money)) {
-                    throw new IllegalStateException(String.format("Acc with id %d doesn't enough money: %f", fromId, money));
-                }
-
-                fromAcc.changeBalance(-money);
-                toAcc.changeBalance(money);
+            if (!fromAcc.hasMoney(money)) {
+                throw new IllegalStateException(String.format("Acc with id %d doesn't enough money: %f", fromId, money));
             }
+
+            fromAcc.changeBalance(-money);
+            toAcc.changeBalance(money);
+
+            s.update(fromAcc);
+            s.update(toAcc);
+
+            s.getTransaction().commit();
         }
     }
 }
