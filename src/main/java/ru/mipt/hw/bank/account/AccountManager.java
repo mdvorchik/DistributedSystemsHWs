@@ -1,4 +1,4 @@
-package ru.mipt.hw.bank;
+package ru.mipt.hw.bank.account;
 
 import org.hibernate.Session;
 
@@ -12,9 +12,6 @@ public class AccountManager {
     public void createAccount() {
         Account account = new Account();
         account.setBalance(100);
-
-        s.getTransaction().begin();
         s.save(account);
-        s.getTransaction().commit();
     }
 }

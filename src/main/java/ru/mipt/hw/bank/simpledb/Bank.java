@@ -1,7 +1,8 @@
-package ru.mipt.hw.bank;
+package ru.mipt.hw.bank.simpledb;
 
 
 import org.hibernate.Session;
+import ru.mipt.hw.bank.account.Account;
 
 public class Bank {
     private final Session s;
